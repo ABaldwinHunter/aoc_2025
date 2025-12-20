@@ -1,8 +1,8 @@
 # part 1
 #
 #
-INPUT_FILE = 'sample.txt'
-# INPUT_FILE = 'input.txt'
+# INPUT_FILE = 'sample.txt'
+INPUT_FILE = 'input.txt'
 
 class Instruction
   attr_accessor :dir, :num
