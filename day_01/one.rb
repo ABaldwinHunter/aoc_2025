@@ -35,26 +35,34 @@ turns = input.map { |instruction| Instruction.from_str(instruction) }
 
 passes_0_count = 0
 current_pointer = 50
+print_things = false
 
 turns.each do |turn|
-  puts "current pointer #{current_pointer}"
-  puts "turn: #{turn.dir} #{turn.num}"
-
   dir = turn.dir
   num = turn.num
+
+  if num > 100
+    print_things = true
+  end
+
+  puts "current pointer #{current_pointer}" if print_things
+  puts "turn: #{turn.dir} #{turn.num}" if print_things
+  puts "current zero passes count: #{passes_0_count}" if print_things
 
   turns_without_moving = num / 100
 
   passes_0_count += turns_without_moving
 
   actual_turn = num % 100
+  counted = false
 
   if dir == "L"
     new_num =  current_pointer - actual_turn
 
-    if new_num < 0
+    if new_num < 0 && current_pointer != 0
       new_num = new_num + 100
       passes_0_count += 1
+      counted = true
     end
   else
     new_num = current_pointer + actual_turn
@@ -62,10 +70,18 @@ turns.each do |turn|
     if new_num > 99
       new_num = new_num - 100
       passes_0_count += 1
+      counted = true
     end
   end
 
+  if (new_num == 0 && counted != true) || actual_turn == 0
+    passes_0_count += 1
+  end
+
   current_pointer = new_num
+  puts "new pointer: #{current_pointer}" if print_things
+  puts "new zero passes count: #{passes_0_count}" if print_things
+  puts "\n"*2 if print_things
 end
 
 puts "running input"
