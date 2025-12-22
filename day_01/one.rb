@@ -1,10 +1,10 @@
 # part 1
 #
-#
-INPUT_FILE = 'sample.txt'
+# INPUT_FILE = 'sample.txt'
 # zeros count is 1066
 # passes_0_count 6216 # too low
 # INPUT_FILE = 'input.txt'
+INPUT_FILE = 'fromsahar.txt'
 
 class Instruction
   attr_accessor :dir, :num
@@ -44,26 +44,25 @@ turns.each do |turn|
   puts "turn: #{turn.dir} #{turn.num}"
 
   if current_pointer == 0 && zero_passed_last_turn == false
+    puts "incrementing passes_0_count, in landed on 0 loop"
     passes_0_count += 1
   end
-  #
-  # count_zero_landing = true
 
   dir = turn.dir
   num = turn.num
 
-  # if dir = left, then go left, or down
-  # if dir = right, then go right, or up
-
   zero_passed_this_turn = false
+  first_time_looping = true
 
   if dir == "L"
     new_num =  current_pointer - num
 
     while new_num < 0
       new_num += 100
-      passes_0_count += 1
+      passes_0_count += 1 unless (first_time_looping && current_pointer == 0) # if it's the first time, then don't
+      puts "incrementing passes_0_count, in L loop"
       zero_passed_this_turn = true
+      first_time_looping = false
     end
   else
     new_num = current_pointer + num
@@ -71,18 +70,19 @@ turns.each do |turn|
     while new_num > 99
       new_num -= 100
 
-      passes_0_count += 1
+      passes_0_count += 1 unless (first_time_looping && current_pointer == 0) # if it's the first time, then don't
+      puts "incrementing passes_0_count, in R loop"
       zero_passed_this_turn = true
+      first_time_looping = false
     end
   end
 
-  # if new_num == 0 && (zero_passed_this_turn == false)
-  #   passes_0_count += 1
-  # end
-  #
   zero_passed_last_turn = zero_passed_this_turn
 
   current_pointer = new_num
+  puts "new num is #{new_num}"
+  puts "\n"
+  puts "\n"
 end
 
 puts "running input"
@@ -92,3 +92,8 @@ puts "passes_0_count #{passes_0_count}"
 # 7282
 # 6216 # too low
 # 6643 # no
+# 6019 # no
+#
+
+# answer: 5978
+# too high 5790
