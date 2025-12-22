@@ -2,9 +2,9 @@
 #
 # INPUT_FILE = 'sample.txt'
 # zeros count is 1066
-# passes_0_count 6216 # too low 6111 6211
-INPUT_FILE = 'input.txt'
-# INPUT_FILE = 'fromsahar.txt'
+# passes_0_count 6216 # too low 6111 6211 6216
+# INPUT_FILE = 'input.txt'
+INPUT_FILE = 'fromsahar.txt'
 
 class Instruction
   attr_accessor :dir, :num
@@ -35,56 +35,37 @@ turns = input.map { |instruction| Instruction.from_str(instruction) }
 
 passes_0_count = 0
 current_pointer = 50
-landed_at_0_on_last_time = false
 
-# count each time lands at 0
 turns.each do |turn|
   puts "current pointer #{current_pointer}"
   puts "turn: #{turn.dir} #{turn.num}"
-  zero_passed_this_turn = false
 
   dir = turn.dir
   num = turn.num
 
-  if num > 99
-    puts "*" * 200
-  end
+  turns_without_moving = num / 100
+
+  passes_0_count += turns_without_moving
+
+  actual_turn = num % 100
 
   if dir == "L"
-    new_num =  current_pointer - num
-    first_pass = true
+    new_num =  current_pointer - actual_turn
 
-    while new_num < 0
-      # test = (landed_at_0_on_last_time && (num / 100) < 1)
-      new_num += 100
-      passes_0_count += 1 unless landed_at_0_on_last_time && first_pass && (num <= 100)
-      first_pass = false
-      puts "incrementing passes_0_count, in L loop"
-      zero_passed_this_turn = true
+    if new_num < 0
+      new_num = new_num + 100
+      passes_0_count += 1
     end
   else
-    new_num = current_pointer + num
+    new_num = current_pointer + actual_turn
 
-    while new_num > 99
-      new_num -= 100
-
+    if new_num > 99
+      new_num = new_num - 100
       passes_0_count += 1
-      puts "incrementing passes_0_count, in R loop"
-      zero_passed_this_turn = true
     end
   end
 
   current_pointer = new_num
-  puts "new num is #{new_num}"
-  puts "\n"
-
-  if current_pointer == 0
-    passes_0_count += 1 unless zero_passed_this_turn
-    landed_at_0_on_last_time = true
-  else
-    # passes_0_count += 1 unless zero_passed_this_turn
-    landed_at_0_on_last_time = false
-  end
 end
 
 puts "running input"
@@ -94,10 +75,7 @@ puts "passes_0_count #{passes_0_count}"
 # 6216 # too low
 # 6643 # no
 # 6019 # no
-#
-
 # sahar answer: 5978
 # current: 5984
 # current: 5874
-#
 # 5987
