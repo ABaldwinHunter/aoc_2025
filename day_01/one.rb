@@ -3,8 +3,8 @@
 # INPUT_FILE = 'sample.txt'
 # zeros count is 1066
 # passes_0_count 6216 # too low 6111 6211 6216
-# INPUT_FILE = 'input.txt'
-INPUT_FILE = 'fromsahar.txt'
+INPUT_FILE = 'input.txt'
+# INPUT_FILE = 'fromsahar.txt'
 
 class Instruction
   attr_accessor :dir, :num
@@ -59,10 +59,13 @@ turns.each do |turn|
   if dir == "L"
     new_num =  current_pointer - actual_turn
 
-    if new_num < 0 && current_pointer != 0
+    if new_num < 0
+      if current_pointer != 0
+        passes_0_count += 1
+        counted = true
+      end
+
       new_num = new_num + 100
-      passes_0_count += 1
-      counted = true
     end
   else
     new_num = current_pointer + actual_turn
@@ -74,7 +77,7 @@ turns.each do |turn|
     end
   end
 
-  if (new_num == 0 && counted != true) || actual_turn == 0
+  if (new_num == 0 && !counted) || actual_turn == 0
     passes_0_count += 1
   end
 
