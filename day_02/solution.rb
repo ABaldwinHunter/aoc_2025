@@ -1,5 +1,5 @@
-# INPUT = 'input.txt'
-INPUT = 'sample.txt'
+INPUT = 'input.txt'
+# INPUT = 'sample.txt'
 
 input = File.read(INPUT).split(",")
 
@@ -49,3 +49,5 @@ total = invalid_ids.values.flatten.sum
 
 puts "total is #{total}"
 # sample is working 1227775554
+#
+# part one 38437576669 - v fast as well, ms
