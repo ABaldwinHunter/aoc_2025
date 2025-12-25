@@ -51,3 +51,4 @@ puts "total is #{total}"
 # sample is working 1227775554
 #
 # part one 38437576669 - v fast as well, ms
+#38437576669
