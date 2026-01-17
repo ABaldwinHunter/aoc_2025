@@ -1,5 +1,5 @@
-# INPUT = 'input.txt'
-INPUT = 'sample.txt'
+INPUT = 'input.txt'
+# INPUT = 'sample.txt'
 
 # first, find the biggest number, most left, if tie
 # that is the first digit
