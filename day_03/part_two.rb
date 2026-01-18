@@ -30,6 +30,9 @@ banks.each do |bank|
         largest.pop
 
         largest << num
+        rejected_count += 1
+      elsif largest.length < 12
+        largest << num
       end
     end
   end
