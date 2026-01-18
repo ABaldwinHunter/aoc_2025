@@ -1,5 +1,5 @@
-INPUT = 'input.txt'
-# INPUT = 'sample.txt'
+# INPUT = 'input.txt'
+INPUT = 'sample.txt'
 
 # need to find the biggest 12 digit number
 # in another form, we want to dismiss the three smallest numbers
@@ -18,11 +18,9 @@ banks.each do |bank|
   # track the largest 12 numbers, going from left to right
   #
   largest = []
-  rejected = {}
-  rejected_count = 0
 
   bank.each.with_index do |num, i|
-    if largest.count == 0
+    if largest.count < 12
       largest << num
     else
       # if greater than all up to a certain point
@@ -37,10 +35,10 @@ banks.each do |bank|
       space_between_num_and_the_end = (BANK_LAST_INDEX - i)
       largest_length = largest.length
 
-      while idx >= 0 && ((largest_length - number_to_go_back + 1 + space_between_num_and_the_end) > 12) # we need at least 12
+      while idx >= 0 && ((largest_length - number_to_go_back) + space_between_num_and_the_end) > 12) # we need at least 12
         latest_large_num_to_check = largest[idx]
 
-        if latest_large_num_to_check > num
+        if latest_large_num_to_check < num
           number_to_go_back += 1
           idx -= 1
         else
@@ -49,10 +47,7 @@ banks.each do |bank|
       end
 
       if number_to_go_back > 0
-        largest = largest[0..(largest.length - (1 + number_to_go_back))]
-        largest << num
-        rejected_count += number_to_go_back
-      elsif largest.length < 12
+        largest = largest[0..(last_index - number_to_go_back)]
         largest << num
       end
     end
