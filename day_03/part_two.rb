@@ -33,10 +33,14 @@ banks.each do |bank|
       # check if a better candidate than the others
       # if all the others are less, then definitely not a good candidate
       #
+
       copy = ones_to_skip.dup
 
+      puts "copy"
+      puts copy
+
       copy.each do |key_num, val_index|
-        next if key_num >= num
+        next if key_num < num
 
         if i - val_index == 1 # 1 adjacent
           ones_to_skip.delete(key_num)
@@ -58,11 +62,21 @@ banks.each do |bank|
     answer << num unless ones_to_skip.values.include? i
   end
 
+  answer = answer.map(&:to_s).join("").to_i
+
+  puts "answer is"
+  puts answer
+
   obj = {}
 
   obj["original"] = bank
   obj["skipped"] = ones_to_skip
-  obj["answer"] = answer.map(&:to_s).join("").to_i
+  obj["answer"] = answer
+
+  results << obj
 end
+
+puts "results"
+puts results
 
 puts results.map { |o| o["answer"] }.sum
