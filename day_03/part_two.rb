@@ -9,7 +9,8 @@ INPUT = 'input.txt'
 
 
 banks = File.read(INPUT).split("\n").map { |bank| bank.split("").map(&:to_i) } # [ [1, 2, 3], [4, 7, ] ] ...
-BANK_LAST_INDEX = banks.first.length - 1
+BANK_LENGTH = banks.first.length
+BANK_LAST_INDEX = BANK_LENGTH - 1
 
 results = []
 
@@ -33,10 +34,10 @@ banks.each do |bank|
 
       idx = last_index
       number_to_go_back = 0
-      space_between_num_and_the_end = (99 - i)
+      space_between_num_and_the_end = (BANK_LAST_INDEX - i)
       largest_length = largest.length
 
-      while idx >= 0 && (largest_length - number_to_go_back + 1 + space_between_num_and_the_end) >= 12 # we need at least 12
+      while idx >= 0 && ((largest_length - number_to_go_back + 1 + space_between_num_and_the_end) > 12) # we need at least 12
         latest_large_num_to_check = largest[idx]
 
         if latest_large_num_to_check > num
@@ -84,3 +85,4 @@ puts results.map { |o| o["answer"] }.sum
 #
 #
 # latest - 406754788014470
+# 411795686123770
