@@ -39,10 +39,13 @@ banks.each do |bank|
       puts "copy"
       puts copy
 
+      # walk through the copy to see if any to replace, from right to left
+      # :wq
+
       copy.each do |key_num, val_index|
         next if key_num < num
 
-        if i - val_index == 1 # 1 adjacent
+        if i - val_index == 1 # 1 adjacent - need a way to check that :
           ones_to_skip.delete(key_num)
 
           ones_to_skip[num] = i
