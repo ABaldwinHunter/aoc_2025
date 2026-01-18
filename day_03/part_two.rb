@@ -20,20 +20,37 @@ banks.each do |bank|
   rejected = {}
   rejected_count = 0
 
-  bank.each do |num|
+  bank.each.with_index do |num, i|
     if largest.count == 0
       largest << num
     else
-      latest = largest.last
+      # if greater than all up to a certain point
+      # and still enough after for
+      #
+      # check how far back to go
 
-      if (largest.all? { |l| num > l }) && largest.length <= 88
-        rejected_count += largest.length
-        largest = [num]
-      elsif num > latest && rejected_count < 88
-        largest.pop
+      last_index = largest.length - 1
 
+      idx = last_index
+      number_to_go_back = 0
+      space_between_num_and_the_end = (99 - i)
+      largest_length = largest.length
+
+      while idx >= 0 && (largest_length - number_to_go_back + 1 + space_between_num_and_the_end) >= 12 # we need at least 12
+        latest_large_num_to_check = largest[idx]
+
+        if latest_large_num_to_check > num
+          number_to_go_back += 1
+          idx -= 1
+        else
+          break
+        end
+      end
+
+      if number_to_go_back > 0
+        largest = largest[0..(largest.length - (1 + number_to_go_back))]
         largest << num
-        rejected_count += 1
+        rejected_count += number_to_go_back
       elsif largest.length < 12
         largest << num
       end
@@ -64,3 +81,6 @@ puts results.map { |o| o["answer"] }.sum
 ## still too low
 # 150284043173300
 # 150284043173300
+#
+#
+# latest - 406754788014470
