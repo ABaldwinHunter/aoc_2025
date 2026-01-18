@@ -26,7 +26,10 @@ banks.each do |bank|
     else
       latest = largest.last
 
-      if num > latest && rejected_count < 3
+      if (largest.all? { |l| num > l }) && largest.length <= 88
+        rejected_count += largest.length
+        largest = [num]
+      elsif num > latest && rejected_count < 88
         largest.pop
 
         largest << num
@@ -53,3 +56,11 @@ puts results.map { |o| o["answer"] }.sum
 
 # 96208577600828
 # That's not the right answer; your answer is too low.
+#
+#
+# 96331932080234
+#
+#
+## still too low
+# 150284043173300
+# 150284043173300
