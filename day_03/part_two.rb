@@ -1,5 +1,5 @@
-# INPUT = 'input.txt'
-INPUT = 'sample.txt'
+INPUT = 'input.txt'
+# INPUT = 'sample.txt'
 
 # need to find the biggest 12 digit number
 # in another form, we want to dismiss the three smallest numbers
@@ -50,3 +50,6 @@ puts "results"
 puts results
 
 puts results.map { |o| o["answer"] }.sum
+
+# 96208577600828
+# That's not the right answer; your answer is too low.
