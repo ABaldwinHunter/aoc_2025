@@ -15,39 +15,40 @@ BANK_LAST_INDEX = BANK_LENGTH - 1
 results = []
 
 def get_number_from_bank(bank)
-  # find the three smallest numbers starting from left
+  # okay first brute force
+  # walk through and find each spot
   #
   #
-  smallest_nums = [
-    # [], # index, number
-    # [], # index, number
-    # [] # index, number
-  ]
+  #
+  new_num = []
 
-  bank.each.with_index do |num, index|
-    should_add = false
+  digits_added = 0
 
-    if smallest_nums.length < 3
-      should_add = true
+  used_indices = []
+
+  while digits_reviewed < bank.length do
+    # find the biggest most left unused one
+    biggest = 0
+    biggest_index = 0
+    found_one = false
+
+    bank.each.with_index do |num, index|
+      if num > biggest && !used_indices.include?(index)
+        biggest = num
+        biggest_index = index
+        found_one = true
+      end
     end
 
-    if smallest_nums.any? {|num_tup| num_tup[1] > num  } # if any number is smaller AND more to left
-      should_add = true
+    if found_one
+      new_num << biggest
+      used_indices << biggest_index
     end
 
-    # then check the best one to replace:
-    #
-    if should_add
-      smallest_nums.shift if smallest_nums.length >= 3
-      smallest_nums << [index, num]
-    end
+    digits_reviewed += 1
   end
 
-  # reconstruct the number without the smallest nums
-
-  indices_to_skip = smallest_nums.map { |tup| tup.first } # skips 'b' (index 1) and 'd' (index 3)
-
-  bank.reject.with_index { |_, index| indices_to_skip.include?(index) }.map(&:to_s).join("").to_i
+  new_num.map(&:to_s).join("").to_i
 end
 
 results = banks.map { |bank| get_number_from_bank(bank) }
