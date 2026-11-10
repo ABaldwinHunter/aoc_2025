@@ -2,7 +2,7 @@
 INPUT = 'sample.txt'
 
 # need to find the biggest 12 digit number
-# in another form, we want to dismiss the three smallest numbers
+# in another form, we want to dismiss the three smallest numbers that occur most to the left
 #
 # maybe the three lowest starting from the left
 #
@@ -14,58 +14,50 @@ BANK_LAST_INDEX = BANK_LENGTH - 1
 
 results = []
 
-banks.each do |bank|
-  # track the largest 12 numbers, going from left to right
+def get_number_from_bank(bank)
+  # find the three smallest numbers starting from left
   #
-  largest = []
+  #
+  smallest_nums = [
+    # [], # index, number
+    # [], # index, number
+    # [] # index, number
+  ]
 
-  bank.each.with_index do |num, i|
-    if largest.count < 12
-      largest << num
-    else
-      # if greater than all up to a certain point
-      # and still enough after for
-      #
-      # check how far back to go
+  bank.each.with_index do |num, index|
+    should_add = false
 
-      last_index = largest.length - 1
+    if smallest_nums.length < 3
+      should_add = true
+    end
 
-      idx = last_index
-      number_to_go_back = 0
-      space_between_num_and_the_end = (BANK_LAST_INDEX - i)
-      largest_length = largest.length
+    if smallest_nums.any? {|num_tup| num_tup[1] > num  } # if any number is smaller AND more to left
+      should_add = true
+    end
 
-      while idx >= 0 && ((largest_length - number_to_go_back) + space_between_num_and_the_end) > 12) # we need at least 12
-        latest_large_num_to_check = largest[idx]
-
-        if latest_large_num_to_check < num
-          number_to_go_back += 1
-          idx -= 1
-        else
-          break
-        end
-      end
-
-      if number_to_go_back > 0
-        largest = largest[0..(last_index - number_to_go_back)]
-        largest << num
-      end
+    # then check the best one to replace:
+    #
+    if should_add
+      smallest_nums.shift if smallest_nums.length >= 3
+      smallest_nums << [index, num]
     end
   end
 
-  obj = {}
+  # reconstruct the number without the smallest nums
 
-  obj["original"] = bank
-  obj["selected"] = largest
-  obj["answer"] = largest.map(&:to_s).join("").to_i
+  indices_to_skip = smallest_nums.map { |tup| tup.first } # skips 'b' (index 1) and 'd' (index 3)
 
-  results << obj
+  bank.reject.with_index { |_, index| indices_to_skip.include?(index) }.map(&:to_s).join("").to_i
 end
+
+results = banks.map { |bank| get_number_from_bank(bank) }
 
 puts "results"
 puts results
 
-puts results.map { |o| o["answer"] }.sum
+puts results.sum
+
+# puts results.map { |o| o["answer"] }.sum
 
 # 96208577600828
 # That's not the right answer; your answer is too low.
