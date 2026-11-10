@@ -12,43 +12,54 @@ banks = File.read(INPUT).split("\n").map { |bank| bank.split("").map(&:to_i) } #
 BANK_LENGTH = banks.first.length
 BANK_LAST_INDEX = BANK_LENGTH - 1
 
-results = []
-
 def get_number_from_bank(bank)
-  # okay first brute force
-  # walk through and find each spot
+  # start from left, find the smallest three numbers
+  # and then stop
+
+  # first choose largest of first four numbers as the start
   #
+  # then, use the same algorthm as before
   #
-  #
-  new_num = []
 
-  digits_added = 0
+  compacted = []
+  amount_left_to_skip = BANK_LENGTH - 12
+  remaining = bank
+  loops = 0
 
-  used_indices = []
+  # first come from the left, trying to skip
+  # compact out all the blockers
+  while amount_left_to_skip > 0 && loops <= BANK_LENGTH do
+    start = 0
+    start_index = 0
+    curr_index = 0
 
-  while digits_reviewed < bank.length do
-    # find the biggest most left unused one
-    biggest = 0
-    biggest_index = 0
-    found_one = false
+    next unless remaining.length > 0
 
-    bank.each.with_index do |num, index|
-      if num > biggest && !used_indices.include?(index)
-        biggest = num
-        biggest_index = index
-        found_one = true
-      end
+    while curr_index < amount_left_to_skip do
+      num = remaining[curr_index]
+
+      if num && num > start
+        start = num
+        start_index = curr_index
+      end # in ties, the earlier one wins so no reset here
+
+      curr_index += 1
     end
 
-    if found_one
-      new_num << biggest
-      used_indices << biggest_index
-    end
+    compacted << start
 
-    digits_reviewed += 1
+    amount_left_to_skip -= (start_index)
+    next_index = start_index + 1
+    last_index = remaining.length - 1
+    copy = remaining[next_index, last_index]
+    remaining = copy
+    loops += 1
   end
 
-  new_num.map(&:to_s).join("").to_i
+  nn = new_num.map(&:to_s).join("").to_i
+  puts "new number is #{nn}"
+  puts ""
+  nn
 end
 
 results = banks.map { |bank| get_number_from_bank(bank) }
