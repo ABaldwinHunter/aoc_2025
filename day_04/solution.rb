@@ -48,9 +48,15 @@ def get_neighbors(row, col)
 end
 
 target_count = 0
+target_marked_grid = grid.map(&:dup)
+pp target_marked_grid
 
 grid.each.with_index do |row, i|
   row.each.with_index do |col, j|
+    me = grid[i][j]
+
+    next unless me == "@"
+
     neighbor_coords = get_neighbors(i, j)
 
     roll_count = 0
@@ -64,11 +70,15 @@ grid.each.with_index do |row, i|
 
     if roll_count < 4
       target_count += 1
+      target_marked_grid[i][j] = "X"
     end
   end
 end
 
 puts "answer is"
 pp target_count
+
+pp target_marked_grid
+
 
 # 78 for sample - too high
