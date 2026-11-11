@@ -16,9 +16,6 @@ pp grid
 # its neighbors
 #
 
-curr_row = 0
-curr_col = 0
-
 LOWER_BOUND_ROW_INDEX = rows.count - 1
 RIGHT_BOUND_COL_INDEX = rows.first.length - 1
 
@@ -32,15 +29,20 @@ def get_neighbors(row, col)
 
   inbound = []
 
-  inbound << [row, east] unless east > RIGHT_BOUND_COL_INDEX
-  inbound << [row, west] unless west < 0
-  inbound << [north, col] unless north < 0
-  inbound << [south, col] unless south > LOWER_BOUND_ROW_INDEX
+  north_valid = (north >= 0)
+  south_valid = (south <= LOWER_BOUND_ROW_INDEX)
+  east_valid = (east <= RIGHT_BOUND_COL_INDEX)
+  west_valid = (west >= 0)
 
-  inbound << [north, east] unless east > RIGHT_BOUND_COL_INDEX || north < 0
-  inbound << [north, west] unless west < 0 || north < 0
-  inbound << [south, east] unless east > RIGHT_BOUND_COL_INDEX || south > LOWER_BOUND_ROW_INDEX
-  inbound << [south, west] unless west < 0 || south > LOWER_BOUND_ROW_INDEX
+  inbound << [row, east] if east_valid
+  inbound << [row, west] if west_valid
+  inbound << [north, col] if north_valid
+  inbound << [south, col] if south_valid
+
+  inbound << [north, east] if (east_valid && north_valid)
+  inbound << [north, west] if (west_valid && north_valid)
+  inbound << [south, east] if (south_valid && east_valid)
+  inbound << [south, west] if (south_valid && west_valid)
 
   inbound
 end
