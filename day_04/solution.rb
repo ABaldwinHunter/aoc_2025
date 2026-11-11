@@ -19,7 +19,7 @@ pp grid
 curr_row = 0
 curr_col = 0
 
-LOWER_BOUND_COL_INDEX = rows.count - 1
+LOWER_BOUND_ROW_INDEX = rows.count - 1
 RIGHT_BOUND_COL_INDEX = rows.first.length - 1
 
 def get_neighbors(row, col)
@@ -35,7 +35,12 @@ def get_neighbors(row, col)
   inbound << [row, east] unless east > RIGHT_BOUND_COL_INDEX
   inbound << [row, west] unless west < 0
   inbound << [north, col] unless north < 0
-  inbound << [south, col] unless south > LOWER_BOUND_COL_INDEX
+  inbound << [south, col] unless south > LOWER_BOUND_ROW_INDEX
+
+  inbound << [north, east] unless east > RIGHT_BOUND_COL_INDEX || north < 0
+  inbound << [north, west] unless west < 0 || north < 0
+  inbound << [south, east] unless east > RIGHT_BOUND_COL_INDEX || south > LOWER_BOUND_ROW_INDEX
+  inbound << [south, west] unless west < 0 || south > LOWER_BOUND_ROW_INDEX
 
   inbound
 end
@@ -50,7 +55,7 @@ grid.each.with_index do |row, i|
 
     neighbor_coords.each do |coords|
       neighbor = grid[coords.first][coords.last]
-      if neighbor == "@"
+      if neighbor == '@'
         roll_count += 1
       end
     end
@@ -64,3 +69,4 @@ end
 puts "answer is"
 pp target_count
 
+# 78 for sample - too high
