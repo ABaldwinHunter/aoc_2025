@@ -1,8 +1,8 @@
 # day 4
 #
 
-# file = 'input.txt'
-file = 'sample.txt'
+file = 'input.txt'
+# file = 'sample.txt'
 
 rows = File.read(file).split("\n")
 
@@ -49,7 +49,7 @@ end
 
 target_count = 0
 target_marked_grid = grid.map(&:dup)
-pp target_marked_grid
+# pp target_marked_grid
 
 grid.each.with_index do |row, i|
   row.each.with_index do |col, j|
@@ -78,7 +78,7 @@ end
 puts "answer is"
 pp target_count
 
-pp target_marked_grid
+# pp target_marked_grid
 
 
 # 78 for sample - too high
