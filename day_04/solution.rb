@@ -8,8 +8,8 @@ rows = File.read(file).split("\n")
 
 grid = rows.map { |row| row.split("") }
 
-puts "grid is"
-pp grid
+# puts "grid is"
+# pp grid
 
 # some options - we could walk the grid and check neighbors
 # or we could build the neighbors first, then ask each cell for
@@ -47,36 +47,52 @@ def get_neighbors(row, col)
   inbound
 end
 
-target_count = 0
+something_changed = false
+times_nothing_changed = 0
+total_removed = 0
 target_marked_grid = grid.map(&:dup)
-# pp target_marked_grid
 
-grid.each.with_index do |row, i|
-  row.each.with_index do |col, j|
-    me = grid[i][j]
+while times_nothing_changed < 2 do
+  # target_count = 0
+  # pp target_marked_grid
+  #
+  something_changed = false
 
-    next unless me == "@"
+  grid.each.with_index do |row, i|
+    row.each.with_index do |col, j|
+      me = target_marked_grid[i][j]
 
-    neighbor_coords = get_neighbors(i, j)
+      next unless me == "@"
 
-    roll_count = 0
+      neighbor_coords = get_neighbors(i, j)
 
-    neighbor_coords.each do |coords|
-      neighbor = grid[coords.first][coords.last]
-      if neighbor == '@'
-        roll_count += 1
+      roll_count = 0
+
+      neighbor_coords.each do |coords|
+        neighbor = target_marked_grid[coords.first][coords.last]
+        if neighbor == '@'
+          roll_count += 1
+        end
+      end
+
+      if roll_count < 4
+        total_removed += 1
+        target_marked_grid[i][j] = "."
+        something_changed = true
       end
     end
+  end
 
-    if roll_count < 4
-      target_count += 1
-      target_marked_grid[i][j] = "X"
-    end
+  if something_changed == false
+    times_nothing_changed += 1
   end
 end
 
-puts "answer is"
-pp target_count
+pp "answer is"
+pp total_removed
+
+  # puts "answer is"
+  # pp target_count # -- part 1
 
 # pp target_marked_grid
 
