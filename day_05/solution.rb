@@ -56,23 +56,58 @@ fresh_count = 0
 ordered = ranges.sort_by { |r| r.begin }
 last_range = nil
 
+# merge_them
+#
+merged_ranges = []
+
+# start = ordered.first.begin # lowest number
+
+curr_start = nil
+curr_end = nil
+
+puts "got to ordered loop"
+
+count = 0
+
 ordered.each do |range|
-  if last_range.nil?
-    last_range = range
+  puts "count is #{count}/#{ordered.count}"
 
-    fresh_count += range.size
-
+  if curr_start.nil?
+    curr_start = range.begin
+    curr_end = range.end
   else
-    # check if overlap
-    if last_range.end >= range.begin
-      added = range.end - last_range.end
-      fresh_count += added
+    if range.begin > curr_end
+      merged_ranges << [curr_start, curr_end]
+
+      curr_start = range.begin
+      curr_end = range.end
     else
-      fresh_count += range.size
-      last_range = range
+      curr_end = [curr_end, range.end].max
     end
+  end
+
+  count += 1
+end
+
+if merged_ranges.last.last != curr_end
+  merged_ranges << [curr_start, curr_end]
+end
+
+# then go through and sum
+#
+# fresh_count = merged_ranges.sum { |r| Range.new(r.first, r.last).count } # SO SLOW
+#
+
+merged_ranges.each do |r|
+  # inclusive
+  # 1,3 => 1,2,3 -> so 3-1 = 2; but if it was just 1, then 1
+  if r.first == r.last
+    fresh_count += 1
+  elsif r.last - r.first == 1
+    fresh_count += 2
+  else
+    fresh_count += ((r.last - r.first) + 1)
   end
 end
 
-
-puts "all_fresh count is #{fresh_count}"
+puts "Fresh count is #{fresh_count}"
