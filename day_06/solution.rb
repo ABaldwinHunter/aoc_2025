@@ -1,5 +1,5 @@
-file = 'sample.txt'
-# file = 'input.txt'
+# file = 'sample.txt'
+file = 'input.txt'
 
 lines = File.read(file).split("\n")
 
@@ -49,7 +49,20 @@ results = operations.map do |op|
   end
 end # default starters for sum and multiply
 
+line_lengths = lines.map { |line| line.count }.uniq
+max_length = line_lengths.max
+
+
+lines.each do |line|
+  while line.length < max_length
+    line << " "
+  end # pad; it seems like the ones that end in white space sometimes get cut off
+end
+
 total_cols = lines.first.size
+
+# line_lengths = lines.map { |line| line.count }.uniq
+# puts "line lengths is #{line_lengths}"
 
 last_index = total_cols - 1
 
@@ -71,7 +84,9 @@ while curr_index >= 0 do
     result_index -= 1 # because moving right to left
   else
     # else, process the vertical number
-    vertical_num = num.gsub(" ", "").to_i
+    vertical_num = stripped.to_i
+
+    puts "vertical num is #{vertical_num}"
 
     operation = operations[result_index]
 
