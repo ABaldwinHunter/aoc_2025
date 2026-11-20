@@ -1,8 +1,8 @@
 # day 7 - manifold beams
 #
 #
-# file_path = 'input.txt'
-file_path = 'sample.txt'
+file_path = 'input.txt'
+# file_path = 'sample.txt'
 
 file = File.read(file_path)
 
