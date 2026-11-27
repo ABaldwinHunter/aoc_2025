@@ -1,8 +1,8 @@
 # day 7 - manifold beams
 #
 #
-# file_path = 'input.txt'
-file_path = 'sample.txt'
+file_path = 'input.txt'
+# file_path = 'sample.txt'
 
 file = File.read(file_path)
 
@@ -22,7 +22,7 @@ SPLITTER = '^'.freeze
 # and count splits as we go
 #
 
-splits = 0
+# splits = 0
 
 curr_row_index = 0 # start at row 1
 curr_col_index = 0
@@ -77,53 +77,54 @@ need_beam_indices = {}
 # puts "split count is #{splits}"
 #
 
-timelines = 1 # one to start
+# At S: start with one timeline.
+# At a blank: carry forward the incoming count unchanged.
+# At a splitter: add the incoming count to both the left and right destinations.
+# Where paths converge: add their counts together.
+#
+
+timelines = {}
 
 # PART 2
 while curr_row_index <= last_row do
   # set col split indices for prev row
   #
-  need_beam_indices_for_next_row = {}
+  need_time_lines_for_next_row = {}
   curr_col_index = 0
 
   while curr_col_index <= last_col do
     item = manifold[curr_row_index][curr_col_index]
+    existing_timeline_count = timelines[curr_col_index] || 0
 
     if item == 'S' || item == BEAM
       # insert intended beam for next row
-      need_beam_indices_for_next_row[curr_col_index] ||= 0
-      need_beam_indices_for_next_row[curr_col_index] += 1
-    elsif item == SPLITTER && (need_beam_indices[curr_col_index]) # only counts as a split if there was a beam intended for here
+      need_time_lines_for_next_row[curr_col_index] ||= 1
+    elsif item == SPLITTER && (timelines[curr_col_index]) # only counts as a split if there was a beam intended for here
       left = (curr_col_index - 1)
       right = (curr_col_index + 1)
-      need_beam_indices_for_next_row[left] ||= 0
-      need_beam_indices_for_next_row[left] += 1
+      need_time_lines_for_next_row[left] ||= 0
+      need_time_lines_for_next_row[left] += existing_timeline_count
 
-      need_beam_indices_for_next_row[right] ||= 0
-      need_beam_indices_for_next_row[right] += 1
-      puts "got to split"
-      # splits += 1
-    elsif item == BLANK && (need_beam_indices[curr_col_index])
+      need_time_lines_for_next_row[right] ||= 0
+      need_time_lines_for_next_row[right] += existing_timeline_count
+    elsif item == BLANK && (timelines[curr_col_index])
         manifold[curr_row_index][curr_col_index] = BEAM
-        need_beam_indices_for_next_row[curr_col_index] ||= 0
-        need_beam_indices_for_next_row[curr_col_index] += 1
+        need_time_lines_for_next_row[curr_col_index] ||= 0
+        need_time_lines_for_next_row[curr_col_index] += existing_timeline_count
       # else no need to do anything, it stays a dot
     end
 
     curr_col_index += 1
   end
 
-  # add the number of timelines per split?
-  need_beam_indices_for_next_row.each do |col, times_hit|
-    # shouldn't be a new timeline if just increasing from the last time
-    next_row = times_hit
+  timelines = need_time_lines_for_next_row
 
-    last_row_beams_here = need_beam_indices[col] || 0
+  # merge timelines if needed
+  # expand if needed
+  #
+  # { 2 => 3, 3 => 1, ... }
 
-    timelines += (times_hit - last_row_beams_here)
-  end
-
-  need_beam_indices = need_beam_indices_for_next_row
+  # At a blank: carry forward the incoming count unchanged.
 
   curr_row_index += 1
 end
@@ -134,7 +135,12 @@ end
 #
 # part 2
 puts "timeline count is #{timelines}"
+
+total = timelines.values.sum
+
+puts "timeline sum is #{total}"
+
 #
 # # 3319 is too low ( 1660 * 2 - )
-2 * 1660 - 2
+# 2 * 1660 - 2
 # split_count * 2 - 1
