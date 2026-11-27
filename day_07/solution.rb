@@ -96,7 +96,7 @@ while curr_row_index <= last_row do
     item = manifold[curr_row_index][curr_col_index]
     existing_timeline_count = timelines[curr_col_index] || 0
 
-    if item == 'S' || item == BEAM
+    if item == 'S'
       # insert intended beam for next row
       need_time_lines_for_next_row[curr_col_index] ||= 1
     elsif item == SPLITTER && (timelines[curr_col_index]) # only counts as a split if there was a beam intended for here
@@ -108,7 +108,6 @@ while curr_row_index <= last_row do
       need_time_lines_for_next_row[right] ||= 0
       need_time_lines_for_next_row[right] += existing_timeline_count
     elsif item == BLANK && (timelines[curr_col_index])
-        manifold[curr_row_index][curr_col_index] = BEAM
         need_time_lines_for_next_row[curr_col_index] ||= 0
         need_time_lines_for_next_row[curr_col_index] += existing_timeline_count
       # else no need to do anything, it stays a dot
